@@ -17,8 +17,8 @@ let server = new Hapi.Server({
         options: {
           abortEarly: false
         }
-      }
-    },<% } %>
+      } <% } %>
+    },
     router: {
       stripTrailingSlash: true
     }
