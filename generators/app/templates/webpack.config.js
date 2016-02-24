@@ -73,7 +73,7 @@ module.exports = {
         browsers: ['IE >= 10', 'last 2 version'],
         features: {
           autoprefixer: {
-            cascase: false
+            cascade: false
           }
         }
       })
