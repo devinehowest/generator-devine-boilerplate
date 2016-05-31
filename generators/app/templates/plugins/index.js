@@ -3,7 +3,7 @@
 let fs = require('fs');
 let validateFileName = require('../modules/validateFileName');
 
-const pluginHandler = (err) => {
+const pluginHandler = err => {
   if(err) console.error(err);
 };
 

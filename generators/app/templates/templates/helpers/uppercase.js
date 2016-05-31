@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = (ctx) => {
+module.exports = ctx => {
   return ctx.toUpperCase();
 };
