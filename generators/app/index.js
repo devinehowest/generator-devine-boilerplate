@@ -17,7 +17,7 @@ module.exports = yeoman.generators.Base.extend({
 
     var done = this.async();
 
-    var default_author = exec('npm config get init.author.name', {encoding: 'utf-8'}) || '';
+    var default_author = exec('yarn config get init.author.name', {encoding: 'utf-8'}) || '';
 
     if(default_author.indexOf('\n') !== -1){
       default_author = default_author.split('\n')[0];
@@ -332,7 +332,7 @@ module.exports = yeoman.generators.Base.extend({
       spawn('git', ['init'], { stdio: 'inherit' });
     }
 
-    spawn('npm', ['install'], { stdio: 'inherit' });
+    spawn('yarn', ['install'], { stdio: 'inherit' });
 
     spawn('webpack', { stdio: 'inherit' });
 
@@ -341,7 +341,7 @@ module.exports = yeoman.generators.Base.extend({
       spawn('git', ['commit', '-m', '"initial commit"'], { stdio: 'inherit' });
     }
 
-    spawn('npm', ['run', 'development'], { stdio: 'inherit' });
+    spawn('yarn', ['run', 'development'], { stdio: 'inherit' });
 
   }
 

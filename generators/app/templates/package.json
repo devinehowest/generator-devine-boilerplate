@@ -5,7 +5,7 @@
   "main": "server.js",<% } %>
   "author": "<%= author %>",
   "scripts": {
-    "development": "webpack --watch & npm run serve",
+    "development": "webpack --watch & yarn run serve",
     "production": "webpack -d -p",<% if (node) { %>
     "start": "forever --minUptime 1000 --spinSleepTime 1000 .",<% } %><% if (test) { %>
     "test": "mocha --compilers js:babel-core/register --recursive",<% } %>

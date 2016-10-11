@@ -15,7 +15,7 @@ Basically, he wears a top hat, lives in your computer, and waits for you to tell
 Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](https://npmjs.org) package repository. You only have to ask for him once, then he packs up and moves into your hard drive. *Make sure you clean up, he likes new and shiny things.*
 
 ```bash
-npm install -g yo
+yarn global add yo
 ```
 
 ### Yeoman Generators
@@ -25,13 +25,13 @@ Yeoman travels light. He didn't pack any generators when he moved in. You can th
 To install generator-devine-project from npm, run:
 
 ```bash
-npm install -g generator-devine-project
+yarn global add generator-devine-project
 ```
 
 Make sure you have nodemon, forever, webpack, babel and eslint installed as global modules
 
 ```bash
-npm install -g nodemon forever webpack babel eslint
+yarn global add nodemon forever webpack babel eslint
 ```
 
 Finally, initiate the generator:
