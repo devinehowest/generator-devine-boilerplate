@@ -25,8 +25,6 @@ module.exports = generator.Base.extend({
 
   initializing(){
 
-    const nodeVersion = require(`node-version`).long;
-
     this.props = {
 
       react: false,
@@ -41,7 +39,7 @@ module.exports = generator.Base.extend({
       api: false,
       jwt: false,
 
-      nodeVersion,
+      nodeVersion: process.version.split(`v`)[1],
 
       secret: Math.random().toString(36).substring(5) + Math.random().toString(36).substring(5)
 
