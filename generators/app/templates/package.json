@@ -46,6 +46,7 @@
     "file-loader": "^0.9.0",
     <% if (!node) { %>"lodash": "^4.16.4",
     <% } %>"html-loader": "^0.4.4",
+    "http-client": "^4.3.1",
     "image-webpack-loader": "^3.0.0",
     <% if (jest) { %>"jest": "^16.0.2",
     <% } %><% if (node) { %>"nodemon": "^1.11.0",

@@ -121,7 +121,9 @@ module.exports = generator.Base.extend({
       ];
 
       const js = [
-        `src/js/script.js`
+        `src/js/script.js`,
+        `src/js/helpers/fetch.js`,
+        `src/js/helpers/index.js`,
       ];
 
       const html = [
