@@ -1,114 +1,185 @@
-'use strict';
+// changed some loader syntax after reading
+// https://webpack.js.org/how-to/upgrade-from-webpack-1/
 
-let webpack = require('webpack');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let path = require('path');
+const path = require(`path`);
 
-let config = require('./_config'); //paths config..
+const webpack = require(`webpack`);<% if (!node) { %>
+const {HotModuleReplacementPlugin} = webpack;<% } %>
+const {UglifyJsPlugin} = webpack.optimize;
 
-let NODE_ENV = '\'development\'';
+const CopyWebpackPlugin = require(`copy-webpack-plugin`);
+const ExtractTextWebpackPlugin = require(`extract-text-webpack-plugin`);
+const configHtmls = require(`webpack-config-htmls`)();
 
-process.argv.forEach(arg => {
-  if(arg === '-p' || arg === '-d'){
-    NODE_ENV = '\'production\'';
-  }
+const extractCSS = new ExtractTextWebpackPlugin(`css/style.css`);
+
+// change for production build on different server path
+const publicPath = `/`;<% if (!node) { %>
+
+const port = 3000;<% } %>
+
+// hard copy assets folder for:
+// - srcset images (not loaded through html-loader )
+// - json files (through fetch)
+// - fonts via WebFontLoader
+
+const copy = new CopyWebpackPlugin([{
+  from: `./src/assets`,
+  to: `assets`
+}], {
+  ignore: [ `.DS_Store` ]
 });
 
-module.exports = {
-
-  entry: [
-    config.build('js', 'src'), //JavaScript entry point
-    config.build('css', 'src') //CSS entry point
+const config = {
+  <% if (!node) { %>
+  // no HTML entry points for production build (bundled in JavaScript)<% } %>
+  entry: [<% if (!node) { %>
+    require.resolve(`react-dev-utils/webpackHotDevClient`),<% } %>
+    `./src/css/style.css`,
+    `./src/js/script.js`
   ],
 
-  output: {
-    path: config.js.dest.path,
-    filename: config.js.dest.file //JavaScript end point
+  resolve: {
+    // import files without extension import ... from './Test'
+    extensions: [`.js`, `.jsx`, `.css`]
   },
 
-  //quickest, webpack -d -p for production
-  devtool: 'eval',
+  output: {
+    path: path.join(__dirname, <% if (node) { %>`server`, `public`<% } else { %>`dist`<% } %>),
+    filename: `js/[name].[hash].js`,
+    publicPath
+  },
+
+  devtool: `source-map`,<% if (!node) { %>
+
+  devServer: {
+    contentBase: `./src`,
+    historyApiFallback: true, // for use with client side router
+    hot: true,
+    port
+  },<% } %>
 
   module: {
 
-    //test: which filetype?,
-    //exclude: which folders to exclude
-
-    loaders: [
-
+    rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          babelrc: path.join(__dirname, '.babelrc')
+        test: /\.css$/,
+        <% if (node) { %>loader<% } else { %>use<% } %>: <% if (node) { %>extractCSS.extract(<% } %>[
+          <% if (!node) { %>`style`,
+          <% } %>{
+            loader: `css`,
+            options: {
+              importLoaders: 1
+            }
+          },
+          {
+            loader: `postcss`
+          }
+        ]<% if (node) { %>)<% } %>
+      },
+      {
+        test: /\.html$/,
+        loader: `html`,
+        options: {
+          attrs: [
+            `audio:src`,
+            `img:src`,
+            `video:src`,
+            `source:srcset`
+          ] // read src from video, img & audio tag
         }
       },
-
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(jsx?)$/,
         exclude: /node_modules/,
-        loader: 'eslint'
+        use: [
+          {
+            loader: `babel`
+          },
+          {
+            loader: `eslint`,
+            options: {
+              fix: true
+            }
+          }
+        ]
       },
-
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!postcss!sass?outputStyle=expanded')
+        test: /\.(svg|png|jpe?g|gif|webp)$/,
+        loader: `url`,
+        options: {
+          limit: 1000, // inline if < 1 kb
+          context: `./src`,
+          name: `[path][name].[ext]`
+        }
+      },
+      {
+        test: /\.(mp3|mp4)$/,
+        loader: `file`,
+        options: {
+          context: `./src`,
+          name: `[path][name].[ext]`
+        }
       }
-
     ]
 
   },
 
-  postcss: function(){
-
-    return [
-
-      require('postcss-will-change'),
-      require('postcss-cssnext')({
-        browsers: ['IE >= 10', 'last 2 version'],
-        features: {
-          autoprefixer: {
-            cascade: false
-          }
-        }
-      })
-
-    ];
-
-  },
-
-  //webpack plugins
-  plugins: [
-
-    new webpack.optimize.DedupePlugin(),
-
-    //extract CSS into seperate file
-    new ExtractTextPlugin(
-      config.build('css', 'dest')
-    ),
-
-    //react smaller build
-    new webpack.DefinePlugin({
-      'process.env': {NODE_ENV: NODE_ENV}
-    })
-
-  ],
-
-  eslint: {
-    configFile: path.join(__dirname, '.eslintrc'),
-    ignorePath: path.join(__dirname, '.eslintignore'),
-    formatter: require('eslint-formatter-pretty'),
-    fix: true
-  },
-
-  resolve: {
-    extensions: ['', '.json', '.js', '.css', '.jsx'],
-    fallback: path.join(__dirname, 'node_modules')
-  },
-
-  resolveLoader: {
-    fallback: path.join(__dirname, 'node_modules')
-  }
+  plugins: [<% if (node) { %>
+    extractCSS,
+    copy<% } else { %>
+    new HotModuleReplacementPlugin()<% } %>
+  ]
 
 };
+
+if(process.env.NODE_ENV === `production`){<% if (!node) { %>
+
+  //remove hot reloading client
+  config.entry.shift();
+
+  //remove CSS rule and add new one, css in external file
+  config.module.rules.shift();
+  config.module.rules.push({
+    test: /\.css$/,
+    loader: extractCSS.extract([
+      {
+        loader: `css`,
+        options: {
+          importLoaders: 1
+        }
+      },
+      {
+        loader: `postcss`
+      }
+    ])
+  });<% } %>
+
+  //image optimizing
+  config.module.rules.push({
+    test: /\.(svg|png|jpe?g|gif)$/,
+    loader: `image-webpack`,
+    enforce: `pre`
+  });
+
+  config.plugins = [<% if (node) { %>
+    ...config.plugins<% } else { %>
+    extractCSS,
+    copy<% } %>,
+    new UglifyJsPlugin({
+      sourceMap: true, // false returns errors.. -p + plugin conflict
+      comments: false
+    })
+  ];
+
+}<% if (!node) { %>else{
+
+  // only include HTMLs in NODE_ENV=development
+  // for Hot Reloading
+  config.entry = [...config.entry, ...configHtmls.entry];
+
+}<% } %>
+
+config.plugins = [...config.plugins, ...configHtmls.plugins];
+
+module.exports = config;

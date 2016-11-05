@@ -1,4 +1,26 @@
 {
-  "presets": ["es2015", "stage-0"<% if (react) { %>, "react"<% } %>],
-  "plugins": ["lodash"]
+
+  "presets": [
+    ["es2015", { "modules": false, "loose": true }],
+    "stage-0"<% if (react) { %>,
+    "react"<% } %>
+  ],
+
+  "env": {
+
+    <% if (react) { %>"development": {
+      "plugins": [
+        "transform-react-jsx-source"
+      ]
+    },
+
+    <% } %>"production": {
+      "plugins": [
+        "lodash"<% if (react) { %>,
+        "transform-react-remove-prop-types"<% } %>
+      ]
+    }
+
+  }
+
 }

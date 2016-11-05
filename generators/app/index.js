@@ -1,347 +1,462 @@
-'use strict';
+const generator = require(`yeoman-generator`);
 
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var path = require('path');
+const mkdir = require(`mkdirp`);
 
-var fs = require('fs');
-var mkdirp = require('mkdirp');
+const chalk = require(`chalk`);
 
-var spawn = require('child_process').spawnSync;
-var exec = require('child_process').execSync;
+const spawn = require(`child_process`).spawnSync;
+const exec = require(`child_process`).exec;
+exec(`command -v yarn >/dev/null 2>&1`, err => {
+  !err
+    ? process.env.BUILDPACK = `yarn`
+    : console.log(chalk.black.bgYellow.bold(
+      `Install yarn (${chalk.underline(`npm install -g yarn`)}) for faster module fetching. Using npm for now...`)
+    );
+});
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = generator.Base.extend({
 
-  prompting: function(){
-
-    var done = this.async();
-
-    var default_author = exec('npm config get init.author.name', {encoding: 'utf-8'}) || '';
-
-    if(default_author.indexOf('\n') !== -1){
-      default_author = default_author.split('\n')[0];
-    }
-
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the splendid ' + chalk.red('Devine Project') + ' generator!'
-    ));
-
-    var prompts = [
-      {
-        type: 'input',
-        name: 'projectname',
-        message: 'Your project name',
-        default: process.cwd().split(path.sep).pop()
-      },{
-        type: 'input',
-        name: 'author',
-        message: 'Your name',
-        default: default_author
-      },{
-        type: 'confirm',
-        name: 'test',
-        message: 'Need testing (Mocha & Chai)? (Yes)',
-        default: true
-      },{
-        type: 'confirm',
-        name: 'hbs_client',
-        message: 'Do you need templates on the client (Handlebars)? (No)',
-        default: false
-      },{
-        when: function(response) {
-          return !response.hbs_client;
-        },
-        type: 'confirm',
-        name: 'react',
-        message: 'Using React (with JSX)? (No)',
-        default: false
-      },{
-        when: function(response) {
-          return response.react;
-        },
-        type: 'confirm',
-        name: 'react_router',
-        message: 'Using react-router? (No)',
-        default: false
-      },{
-        when: function(response) {
-          return response.react;
-        },
-        type: 'confirm',
-        name: 'redux',
-        message: 'Using redux? (No)',
-        default: false
-      },{
-        type: 'confirm',
-        name: 'node',
-        message: 'Do you need a Node server (Hapi)? (Yes)',
-        default: true
-      },{
-        when: function(response) {
-          return response.node;
-        },
-        type: 'confirm',
-        name: 'hbs_server',
-        message: 'Do you need templates on the server (Handlebars)? (No)',
-        default: false
-      },{
-        when: function(response) {
-          return response.node;
-        },
-        type: 'confirm',
-        name: 'mongoose',
-        message: 'Using MongoDB (Mongoose)? (No)',
-        default: false
-      },{
-        when: function(response) {
-          return response.node;
-        },
-        type: 'confirm',
-        name: 'heroku',
-        message: 'Make your project ready for Heroku deployment? (No)',
-        default: false
-      },{
-        type: 'confirm',
-        name: 'git',
-        message: 'create a git repository (+ initial commit)? (Yes)',
-        default: true
-      }
-    ];
-
-    this.prompt(prompts, function(props){
-
-      this.props = props;
-
-      if(!this.props.hbs_server){
-        this.hbs_server = false;
-      }
-
-      if(!this.props.heroku){
-        this.heroku = false;
-      }
-
-      if(!this.props.mongoose){
-        this.mongoose = false;
-      }
-
-      if(!this.props.react_router){
-        this.react_router = false;
-      }
-
-      if(!this.props.redux){
-        this.redux = false;
-      }
-
-      if(!this.props.react){
-        this.react = false;
-      }
-
-      if(!this.props.test){
-        this.test = false;
-      }
-
-      for(var prop in this.props){
-        this[prop] = this.props[prop];
-      }
-
-      this.year = new Date().getFullYear();
-      this.pwd = Math.random().toString(36).substring(5);
-
-      done();
-
-    }.bind(this));
-
-  },
-
-  _copy: function(file){
+  _copyFile(f){
     this.fs.copyTpl(
-      this.templatePath(file),
-      this.destinationPath(file),
-      this,
+      this.templatePath(f),
+      this.destinationPath(f),
+      this.props,
       {
         interpolate: /<%=([\s\S]+?)%>/g
       }
     );
   },
 
+  _createDir(d){
+    mkdir(d, e => {
+      if(e) console.error(e);
+    });
+  },
+
+  initializing(){
+
+    this.props = {
+
+      react: false,
+      redux: false,
+      reactRouter: false,
+
+      node: false,
+      mongo: false,
+      heroku: false,
+
+      jest: false,
+      api: false,
+      jwt: false,
+
+      nodeVersion: process.version.split(`v`)[1],
+
+      secret: Math.random().toString(36).substring(5) + Math.random().toString(36).substring(5)
+
+    };
+
+  },
+
+  prompting(){
+
+    return this.prompt([{
+      type: `input`,
+      name: `name`,
+      message: `Your project name`,
+      default: this.appname
+    }, {
+      type: `confirm`,
+      name: `react`,
+      default: false,
+      message: `Do you need React? (No)`
+    }, {
+      when: r => r.react,
+      type: `confirm`,
+      name: `reactRouter`,
+      default: false,
+      message: `with React-Router? (No)`
+    }, {
+      when: r => r.react,
+      type: `confirm`,
+      name: `redux`,
+      default: false,
+      message: `with Redux? (No)`
+    }, {
+      type: `confirm`,
+      name: `node`,
+      default: false,
+      message: `Do you need a Node server? (Hapi) (No)`
+    }, {
+      when: r => r.node,
+      type: `confirm`,
+      name: `mongo`,
+      default: false,
+      message: `with MongoDB? (Mongoose) (No)`
+    }, {
+      when: r => r.mongo,
+      type: `confirm`,
+      name: `api`,
+      default: false,
+      message: `Do you need an API? (No)`
+    }, {
+      when: r => r.api,
+      type: `confirm`,
+      name: `jwt`,
+      default: false,
+      message: `with authentication? (JWT)? (No)`
+    }, {
+      when: r => r.node,
+      type: `confirm`,
+      name: `heroku`,
+      default: false,
+      message: `ready for deployment to Heroku? (No)`
+    }, {
+      type: `confirm`,
+      name: `jest`,
+      default: false,
+      message: `need testing? (Jest) (No)`
+    }]).then(props => {
+      this.props = Object.assign(this.props, props);
+    });
+
+  },
+
   writing: {
 
-    app: function(){
+    appFiles(){
 
-      var files = [
-        '_js/script.js',
-        '_scss/style.scss', '_scss/_reset.scss'
+      const css = [
+        `src/css/reset.css`,
+        `src/css/style.css`
       ];
 
-      if(this.hbs_client){
-        files.push('_hbs/helloworld.hbs');
-      }
+      const js = [
+        `src/js/script.js`
+      ];
 
-      if(this.hbs_client && !this.hbs_server){
+      const html = [
+        `src/index.html`
+      ];
 
-        this.fs.copyTpl(
-          this.templatePath('templates/helpers/uppercase.js'),
-          this.destinationPath('_helpers/uppercase.js'),
-          this,
-          {
-            interpolate: /<%=([\s\S]+?)%>/g
-          }
-        );
+      let files = [
+        ...css,
+        ...html,
+        ...js
+      ];
 
-      }
+      const react = [
+        `src/js/containers/App.jsx`,
+        `src/js/containers/index.js`
+      ];
 
-      if(!this.node){
+      const reactRouter = [
+        `src/js/pages/Home.jsx`,
+        `src/js/pages/index.js`
+      ];
 
-        files.push('index.html');
+      const redux = [
+        `src/js/store/index.js`
+      ];
 
-      }else{
+      const node = [
 
-        if(this.hbs_client){
-          fs.mkdir('./_helpers');
+        `server/lib/pluginHandler.js`,
+        `server/lib/isValidName.js`,
+
+        `server/modules/index.js`,
+        `server/routes/index.js`,
+
+        `server/index.js`
+
+      ];
+
+      const reactRouterNode = [
+        `server/routes/static/spa.js`
+      ];
+
+      const noReactRouterNode = [
+        `server/routes/static/public.js`
+      ];
+
+      const mongo = [
+        `server/modules/mongoose/index.js`
+      ];
+
+      const jwt = [
+
+        `server/modules/token/index.js`,
+
+        `server/modules/mongoose/const/Scopes.js`,
+        `server/modules/mongoose/models/User.js`,
+
+        `server/routes/api/auth.js`,
+        `server/routes/api/users.js`,
+        `server/routes/api/test.js`
+
+      ];
+
+      if(this.props.react){
+
+        files = [
+          ...files,
+          ...react
+        ];
+
+        if(this.props.reactRouter){
+
+          files = [
+            ...files,
+            ...reactRouter
+          ];
+
         }
 
-        files.push('server.js', 'routes/index.js',
-          'routes/static.js',
-          'plugins/index.js', 'plugins/helloplugin.js',
-          'modules/validateFileName.js');
+        if(this.props.redux){
 
-        if(this.mongoose){
-          mkdirp('./models/mongoose');
+          files = [
+            ...files,
+            ...redux
+          ];
+
         }
 
-        files.push('routes/api.js');
+      }
 
-        if(this.hbs_server){
+      if(this.props.node){
 
-          files.push('routes/views.js', 'templates/index.hbs',
-            'templates/helpers/uppercase.js', 'templates/helpers/section.js',
-            'templates/partials/welcome.hbs');
+        files = [
+          ...files,
+          ...node
+        ];
 
-          this.fs.copyTpl(
-            this.templatePath('index.html'),
-            this.destinationPath('templates/layouts/layout.hbs'),
-            this,
-            {
-              interpolate: /<%=([\s\S]+?)%>/g
+        if(this.props.mongo){
+
+          files = [
+            ...files,
+            ...mongo
+          ];
+
+          if(this.props.api){
+
+            if(this.props.jwt){
+
+              files = [
+                ...files,
+                ...jwt
+              ];
+
             }
-          );
+
+          }
+
+        }
+
+        if(this.props.reactRouter){
+
+          files = [
+            ...files,
+            ...reactRouterNode
+          ];
 
         }else{
 
-          this.fs.copyTpl(
-            this.templatePath('index.html'),
-            this.destinationPath('public/index.html'),
-            this,
-            {
-              interpolate: /<%=([\s\S]+?)%>/g
-            }
-          );
+          files = [
+            ...files,
+            ...noReactRouterNode
+          ];
 
         }
 
-        fs.mkdir('./models');
-
       }
 
-      if(this.test){
-        fs.mkdir('./test');
-      }
-
-      if(this.react){
-
-        files.push('./_js/components/index.js');
-        files.push('./_js/components/HelloWorld.jsx');
-
-        if(this.react_router){
-          files.push('./_js/router/index.js');
-          files.push('./_js/pages/index.js');
-          files.push('./_js/pages/Home.jsx');
-        }
-
-        if(this.redux){
-          mkdirp('./_js/actions');
-          mkdirp('./_js/constants');
-          mkdirp('./_js/containers');
-          mkdirp('./_js/reducers');
-          mkdirp('./_js/store');
-        }
-
-
-      }
-
-      for(var i = 0; i < files.length; i++){
-        this._copy(files[i]);
-      }
+      files.forEach(f => this._copyFile(f));
 
     },
 
-    projectfiles: function(){
+    appDirs(){
 
-      var files = [
-        '.babelrc', '.editorconfig',
-        '.eslintignore',
-        '_config.js', 'webpack.config.js',
-        'package.json',
-        'README.md', 'LICENSE'
+      let dirs = [];
+
+      const node = [
+        `server/public`,
+        `server/uploads`
       ];
 
-      if(this.node){
+      const noNode = [
+        `dist`
+      ];
 
-        files.push('nodemon.json', '.env');
+      const react = [
+        `src/js/components`
+      ];
 
-        if(this.heroku){
-          files.push('Procfile', '.slugignore');
+      const redux = [
+        `src/js/actions`,
+        `src/js/constants`,
+        `src/js/reducers`
+      ];
+
+      const jest = [
+        `__tests__`
+      ];
+
+      const mongo = [
+        `server/modules/mongoose/models`
+      ];
+
+      const api = [
+        `server/routes/api`
+      ];
+
+      if(this.props.node){
+
+        if(this.props.api){
+
+          dirs = [
+            ...dirs,
+            ...api
+          ];
+
         }
-      }
 
-      for(var i = 0; i < files.length; i++){
-        this._copy(files[i]);
-      }
+        dirs = [
+          ...dirs,
+          ...node
+        ];
 
-      this.fs.copyTpl(
-        this.templatePath('_.eslintrc'),
-        this.destinationPath('.eslintrc'),
-        this,
-        {
-          interpolate: /<%=([\s\S]+?)%>/g
+        if(this.props.mongo && !this.props.jwt){
+
+          dirs = [
+            ...dirs,
+            ...mongo
+          ];
+
+
         }
-      );
 
-      if(this.git){
+      }else{
 
-        this.fs.copyTpl(
-          this.templatePath('_gitignore'),
-          this.destinationPath('.gitignore'),
-          this,
-          {
-            interpolate: /<%=([\s\S]+?)%>/g
-          }
-        );
+        dirs = [
+          ...dirs,
+          ...noNode
+        ];
 
       }
+
+      if(this.props.react){
+
+        dirs = [
+          ...dirs,
+          ...react
+        ];
+
+        if(this.props.redux){
+
+          dirs = [
+            ...dirs,
+            ...redux
+          ];
+
+        }
+
+      }
+
+      if(this.props.jest){
+
+        dirs = [
+          ...dirs,
+          ...jest
+        ];
+
+      }
+
+      dirs.forEach(d => this._createDir(d));
+
+    },
+
+    settings(){
+
+      const eslint = [
+        `.eslintignore`,
+        `.eslintrc`,
+      ];
+
+      const git = [
+        `README.md`,
+        `.gitignore`
+      ];
+
+      const babel = [
+        `.babelrc`
+      ];
+
+      const postcss = [
+        `postcss.config.js`
+      ];
+
+      const stylelint = [
+        `.stylelintrc`
+      ];
+
+      const webpack = [
+        `webpack.config.js`
+      ];
+
+      const npm = [
+        `package.json`
+      ];
+
+      let files = [
+        ...eslint,
+        ...git,
+        ...babel,
+        ...postcss,
+        ...stylelint,
+        ...webpack,
+        ...npm
+      ];
+
+      if(this.props.node){
+
+        const node = [
+          `.env`,
+          `nodemon.json`,
+        ];
+
+        files = [
+          ...files,
+          ...node
+        ];
+
+      }
+
+      files.forEach(f => this._copyFile(f));
 
     }
 
   },
 
-  install: function(){
+  install(){
 
-    if(this.git){
-      spawn('git', ['init'], { stdio: 'inherit' });
+    spawn(`git`, [`init`], {stdio: `inherit`});
+
+    process.env.BUILDPACK === `yarn`
+      ? spawn(`yarn`, [], {stdio: `inherit`})
+      : spawn(`npm`, [`install`], {stdio: `inherit`});
+
+    spawn(`git`, [`add`, `.`], {stdio: `inherit`});
+    spawn(`git`, [`commit`, `-m`, `"initial commit"`], {stdio: `inherit`});
+
+    if(this.props.heroku){
+      spawn(`heroku`, [`create`], {stdio: `inherit`});
+      if(process.env.BUILDPACK === `yarn`) {
+        spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
+      }
     }
 
-    spawn('npm', ['install'], { stdio: 'inherit' });
-
-    spawn('webpack', { stdio: 'inherit' });
-
-    if(this.git){
-      spawn('git', ['add', '.'], { stdio: 'inherit' });
-      spawn('git', ['commit', '-m', '"initial commit"'], { stdio: 'inherit' });
-    }
-
-    spawn('npm', ['run', 'development'], { stdio: 'inherit' });
+    process.env.BUILDPACK === `yarn`
+      ? spawn(`yarn`, [`run`, `development`], {stdio: `inherit`})
+      : spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
 
   }
 
