@@ -2,11 +2,11 @@
   "name": "<%= name %>",
   "version": "0.1.0",
   "scripts": {
-    "development": "npm run clean && <% if (node) { %>nodemon . & NODE_ENV=development webpack --watch<% } else { %>NODE_ENV=development webpack-dev-server --open<% } %>",<% if (node) { %>
-    "start": "npm run serve",<% } %>
+    "development": "<% if(process.env.BUILDPACK === 'yarn'){ %>yarn<% }else{ %>npm<% } %> run clean && <% if (node) { %>nodemon . & NODE_ENV=development webpack --watch<% } else { %>NODE_ENV=development webpack-dev-server --open<% } %>",<% if (node) { %>
+    "start": "<% if(process.env.BUILDPACK === 'yarn'){ %>yarn<% }else{ %>npm<% } %> run serve",<% } %>
     "serve": "<% if (node) { %>forever .<% } else { %>ws -d ./dist -c -p 3000 <% if (reactRouter) { %>-s<% } %><% } %>",
     "clean": "rimraf <% if (node) { %>./server/public/<% } else { %>./dist<% } %>",
-    "production": "npm run clean && NODE_ENV=production webpack -p"<% if (jest) { %>,
+    "production": "<% if(process.env.BUILDPACK === 'yarn'){ %>yarn<% }else{ %>npm<% } %> run clean && NODE_ENV=production webpack -p"<% if (jest) { %>,
     "test": "jest --coverage"<% } %>
   },<% if (node) { %>
   "main": "server/index.js",
@@ -46,7 +46,6 @@
     "file-loader": "^0.9.0",
     <% if (!node) { %>"lodash": "^4.16.4",
     <% } %>"html-loader": "^0.4.4",
-    "http-client": "^4.3.1",
     "image-webpack-loader": "^3.0.0",
     <% if (jest) { %>"jest": "^16.0.2",
     <% } %><% if (node) { %>"nodemon": "^1.11.0",

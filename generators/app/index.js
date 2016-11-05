@@ -1,8 +1,18 @@
 const generator = require(`yeoman-generator`);
 
-const spawn = require(`child_process`).spawnSync;
-
 const mkdir = require(`mkdirp`);
+
+const chalk = require(`chalk`);
+
+const spawn = require(`child_process`).spawnSync;
+const exec = require(`child_process`).exec;
+exec(`command -v yarn >/dev/null 2>&1`, err => {
+  !err
+    ? process.env.BUILDPACK = `yarn`
+    : console.log(chalk.black.bgYellow.bold(
+      `Install yarn (${chalk.underline(`npm install -g yarn`)}) for faster module fetching. Using npm for now...`)
+    );
+});
 
 module.exports = generator.Base.extend({
 
@@ -121,9 +131,7 @@ module.exports = generator.Base.extend({
       ];
 
       const js = [
-        `src/js/script.js`,
-        `src/js/helpers/fetch.js`,
-        `src/js/helpers/index.js`,
+        `src/js/script.js`
       ];
 
       const html = [
@@ -432,18 +440,23 @@ module.exports = generator.Base.extend({
 
     spawn(`git`, [`init`], {stdio: `inherit`});
 
-    spawn(`yarn`, [], {stdio: `inherit`});
+    process.env.BUILDPACK === `yarn`
+      ? spawn(`yarn`, [], {stdio: `inherit`})
+      : spawn(`npm`, [`install`], {stdio: `inherit`});
 
     spawn(`git`, [`add`, `.`], {stdio: `inherit`});
     spawn(`git`, [`commit`, `-m`, `"initial commit"`], {stdio: `inherit`});
 
     if(this.props.heroku){
       spawn(`heroku`, [`create`], {stdio: `inherit`});
-      spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
+      if(process.env.BUILDPACK === `yarn`) {
+        spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
+      }
     }
 
-    spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
-
+    process.env.BUILDPACK === `yarn`
+      ? spawn(`yarn`, [`run`, `development`], {stdio: `inherit`})
+      : spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
 
   }
 
