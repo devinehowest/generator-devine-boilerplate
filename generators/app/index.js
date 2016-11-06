@@ -60,8 +60,11 @@ module.exports = generator.Base.extend({
 
     };
 
-    /* yarn check sync (try, catch) */
-
+    try {
+      require(`child_process`).execSync(`yarn --version >/dev/null 2>&1`, {encoding: `utf8`});
+    } catch (e) {
+      this.props.yarn = false;
+    }
   },
 
   prompting(){
