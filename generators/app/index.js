@@ -3,9 +3,13 @@ const generator = require(`yeoman-generator`);
 const mkdir = require(`mkdirp`);
 
 const spawn = require(`child_process`).spawnSync;
-const exec = require(`child_process`).exec;
 
 module.exports = generator.Base.extend({
+
+  constructor: function(){
+    generator.Base.apply(this, arguments);
+    this.option(`yarn`, {alias: `y`});
+  },
 
   _copyFile(f){
     this.fs.copyTpl(
@@ -21,16 +25,6 @@ module.exports = generator.Base.extend({
   _createDir(d){
     mkdir(d, e => {
       if(e) console.error(e);
-    });
-  },
-
-  _checkYarn(){
-    exec(`command -v yarn >/dev/null 2>&1`, err => {
-      if(err) {
-        return false;
-      } else {
-        return true;
-      }
     });
   },
 
@@ -51,7 +45,6 @@ module.exports = generator.Base.extend({
       jwt: false,
 
       nodeVersion: process.version.split(`v`)[1],
-      yarn: this._checkYarn(),
 
       secret: Math.random().toString(36).substring(5) + Math.random().toString(36).substring(5)
 
@@ -442,7 +435,7 @@ module.exports = generator.Base.extend({
 
     spawn(`git`, [`init`], {stdio: `inherit`});
 
-    if(this.props.yarn) {
+    if(this.options.yarn) {
       spawn(`yarn`, [], {stdio: `inherit`});
     } else {
       spawn(`npm`, [`install`], {stdio: `inherit`});
@@ -453,7 +446,7 @@ module.exports = generator.Base.extend({
 
     if(this.props.heroku){
       spawn(`heroku`, [`create`], {stdio: `inherit`});
-      if(this.props.yarn) {
+      if(this.options.yarn) {
         spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
       }
     }
