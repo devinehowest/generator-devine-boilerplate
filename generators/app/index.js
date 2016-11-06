@@ -2,17 +2,8 @@ const generator = require(`yeoman-generator`);
 
 const mkdir = require(`mkdirp`);
 
-const chalk = require(`chalk`);
-
 const spawn = require(`child_process`).spawnSync;
 const exec = require(`child_process`).exec;
-exec(`command -v yarn >/dev/null 2>&1`, err => {
-  !err
-    ? process.env.BUILDPACK = `yarn`
-    : console.log(chalk.black.bgYellow.bold(
-      `Install yarn (${chalk.underline(`npm install -g yarn`)}) for faster module fetching. Using npm for now...`)
-    );
-});
 
 module.exports = generator.Base.extend({
 
@@ -33,6 +24,16 @@ module.exports = generator.Base.extend({
     });
   },
 
+  _checkYarn(){
+    exec(`command -v yarn >/dev/null 2>&1`, err => {
+      if(err) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  },
+
   initializing(){
 
     this.props = {
@@ -50,6 +51,7 @@ module.exports = generator.Base.extend({
       jwt: false,
 
       nodeVersion: process.version.split(`v`)[1],
+      yarn: this._checkYarn(),
 
       secret: Math.random().toString(36).substring(5) + Math.random().toString(36).substring(5)
 
@@ -440,23 +442,23 @@ module.exports = generator.Base.extend({
 
     spawn(`git`, [`init`], {stdio: `inherit`});
 
-    process.env.BUILDPACK === `yarn`
-      ? spawn(`yarn`, [], {stdio: `inherit`})
-      : spawn(`npm`, [`install`], {stdio: `inherit`});
+    if(this.props.yarn) {
+      spawn(`yarn`, [], {stdio: `inherit`});
+    } else {
+      spawn(`npm`, [`install`], {stdio: `inherit`});
+    }
 
     spawn(`git`, [`add`, `.`], {stdio: `inherit`});
     spawn(`git`, [`commit`, `-m`, `"initial commit"`], {stdio: `inherit`});
 
     if(this.props.heroku){
       spawn(`heroku`, [`create`], {stdio: `inherit`});
-      if(process.env.BUILDPACK === `yarn`) {
+      if(this.props.yarn) {
         spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
       }
     }
 
-    process.env.BUILDPACK === `yarn`
-      ? spawn(`yarn`, [`run`, `development`], {stdio: `inherit`})
-      : spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
+    spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
 
   }
 
