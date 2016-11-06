@@ -6,12 +6,17 @@ const spawn = require(`child_process`).spawnSync;
 
 module.exports = generator.Base.extend({
 
-  constructor: function(){
-    generator.Base.apply(this, arguments);
-    this.option(`yarn`, {alias: `y`});
+  _spawn(cmd){
+
+    const parts = cmd.split(` `);
+    const [first, ...rest] = parts;
+
+    spawn(first, rest, {stdio: `inherit`});
+
   },
 
   _copyFile(f){
+
     this.fs.copyTpl(
       this.templatePath(f),
       this.destinationPath(f),
@@ -20,12 +25,15 @@ module.exports = generator.Base.extend({
         interpolate: /<%=([\s\S]+?)%>/g
       }
     );
+
   },
 
   _createDir(d){
+
     mkdir(d, e => {
       if(e) console.error(e);
     });
+
   },
 
   initializing(){
@@ -44,11 +52,15 @@ module.exports = generator.Base.extend({
       api: false,
       jwt: false,
 
+      yarn: true,
+
       nodeVersion: process.version.split(`v`)[1],
 
       secret: Math.random().toString(36).substring(5) + Math.random().toString(36).substring(5)
 
     };
+
+    /* yarn check sync (try, catch) */
 
   },
 
@@ -433,25 +445,22 @@ module.exports = generator.Base.extend({
 
   install(){
 
-    spawn(`git`, [`init`], {stdio: `inherit`});
+    this._spawn(`git init`);
 
-    if(this.options.yarn) {
-      spawn(`yarn`, [], {stdio: `inherit`});
-    } else {
-      spawn(`npm`, [`install`], {stdio: `inherit`});
-    }
+    if(this.props.yarn) this._spawn(`yarn`);
+    else this._spawn(`npm install`);
 
-    spawn(`git`, [`add`, `.`], {stdio: `inherit`});
-    spawn(`git`, [`commit`, `-m`, `"initial commit"`], {stdio: `inherit`});
+    this._spawn(`git add .`);
+    this._spawn(`git commit -m "initial commit"`);
 
     if(this.props.heroku){
-      spawn(`heroku`, [`create`], {stdio: `inherit`});
-      if(this.options.yarn) {
-        spawn(`heroku`, [`buildpacks:set`, `https://github.com/heroku/heroku-buildpack-nodejs#yarn`], {stdio: `inherit`});
+      this._spawn(`heroku create`);
+      if(this.props.yarn){
+        this._spawn(`heroku buildbacks:set https://github.com/heroku/heroku-buildpack-nodejs#yarn`);
       }
     }
 
-    spawn(`npm`, [`run`, `development`], {stdio: `inherit`});
+    this._spawn(`npm run development`);
 
   }
 
