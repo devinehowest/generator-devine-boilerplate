@@ -1,0 +1,3 @@
+/node_modules
+<% if (node) { %>/server/public<% } else { %>/dist<% } %>
+.DS_Store

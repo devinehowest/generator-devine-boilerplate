@@ -1,0 +1,4 @@
+{
+  "ignoreFiles": "./<% if (node) { %>server/public<% } else { %>dist<% } %>/**/*.css",
+  "extends": "stylelint-config-devine"
+}

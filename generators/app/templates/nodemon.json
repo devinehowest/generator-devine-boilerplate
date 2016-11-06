@@ -1,31 +1,11 @@
 {
 
-  "ext": "js, jsx, <% if (hbs_server) { %>handlebars, hbs ,<% } %> json, html",
-
-  "watch": [<% if (hbs_server) { %>
-    "/helpers/*",
-    "/templates/*",<% } %>
-    "/modules/*",
-    "/plugins/*",
-    "/models/*",
-    "/routes/*"
+  "watch": [
+    "/server/*"
   ],
 
-  "ignore": [<% if (hbs_client) { %>
-    "/_hbs/*",<% } %><% if (hbs_server) { %>
-    "/_helpers/*",<% } %>
-    "/_js/*",
-    "/_scss/*",
-    "/node_modules/*",
-    "/public/*",
-    "_config.js",
-    "gulpfile.js",
-    "package.json",
-    "webpack.config.js"
-  ],
-
-  "events": {
-    "start": "eslint */ --ignore-pattern _js/ --fix --format=node_modules/eslint-formatter-pretty"
-  }
+  "ignore": [
+    "/server/public/*"
+  ]
 
 }

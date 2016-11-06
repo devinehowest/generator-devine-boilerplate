@@ -1,66 +1,70 @@
 {
-  "name": "<%= projectname %>",
+  "name": "<%= name %>",
   "version": "0.1.0",
-  "description": "",<% if (node) { %>
-  "main": "server.js",<% } %>
-  "author": "<%= author %>",
   "scripts": {
-    "development": "webpack --watch & npm run serve",
-    "production": "webpack -d -p",<% if (node) { %>
-    "start": "forever --minUptime 1000 --spinSleepTime 1000 .",<% } %><% if (test) { %>
-    "test": "mocha --compilers js:babel-core/register --recursive",<% } %>
-    "serve": "<% if (!node) { %>python -m SimpleHTTPServer<% } else { %>nodemon .<% } %>"
-  },
-  "devDependencies": {
-    "postcss-cssnext": "^2.5.2",
-    "postcss-will-change": "^1.1.0",
-    "babel-core": "^6.7.7",
-    "babel-eslint": "^6.0.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-preset-stage-0": "^6.5.0",<% if (react) { %>
-    "babel-preset-react": "^6.5.0",<% } %>
-    "css-loader": "^0.23.1",
-    "eslint": "^2.9.0",
-    "eslint-loader": "^1.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",<% if (!hbs_server && hbs_client) { %>
-    "handlebars": "^4.0.5",<% } %><% if (hbs_client) { %>
-    "handlebars-loader": "^1.3.0",<% } %>
-    "node-sass": "^3.7.0",
-    "postcss-loader": "^0.9.1",
-    "sass-loader": "^3.2.0",<% if (test) { %>
-    "mocha": "^2.4.5",
-    "chai": "^3.5.0",<% } %>
-    "style-loader": "^0.13.1",<% if (react) { %>
-    "react": "^15.0.2",
-    "react-dom": "^15.0.2",<% if (react_router) { %>
-    "react-router": "^2.4.0",
-    "history": "^2.1.1",<% } %><% if (redux) { %><% if (react_router) { %>
-    "redux-router": "1.0.0-beta8",<% } %>
-    "redux": "^3.5.2",<% } %>
-    "eslint-plugin-react": "^5.0.1",<% } %><% if (!node) { %>
-    "lodash": "^4.11.2",<% } %>
-    "babel-plugin-lodash": "^2.3.0",
-    "eslint-plugin-babel": "^3.2.0",
-    "eslint-formatter-pretty": "^0.2.2",
-    "webpack": "^1.13.0"
+    "development": "npm run clean && <% if (node) { %>nodemon . & NODE_ENV=development webpack --watch<% } else { %>NODE_ENV=development webpack-dev-server --open<% } %>",<% if (node) { %>
+    "start": "npm run serve",<% } %>
+    "serve": "<% if (node) { %>forever .<% } else { %>ws -d ./dist -c -p 3000 <% if (reactRouter) { %>-s<% } %><% } %>",
+    "clean": "rimraf <% if (node) { %>./server/public/<% } else { %>./dist<% } %>",
+    "production": "npm run clean && NODE_ENV=production webpack -p"<% if (jest) { %>,
+    "test": "jest --coverage"<% } %>
   },<% if (node) { %>
+  "main": "server/index.js",
   "engines": {
-    "node": "5.x.x",
-    "npm": "3.x.x"
+    "node": "<%= nodeVersion %>"
   },
-  "dependencies": {<% if (hbs_server) { %>
-    "handlebars": "^4.0.5",<% } %><% if (heroku) { %>
-    "forever": "^0.15.1",<% } %>
-    "hapi": "^13.3.0",
-    "inert": "^3.2.1",<% if (hbs_server) { %>
-    "vision": "^4.1.0",<% } %><% if (mongoose) { %>
-    "mongoose": "^4.4.14",<% } %>
+  <% } %><% if (node) { %>"dependencies": {
     "dotenv": "^2.0.0",
-    "lodash": "^4.11.2"<% if (hbs_server) { %>,
-    "joi": "^8.0.5",
+    "forever": "^0.15.2",
+    "glob": "^7.1.1",
+    "lodash": "^4.16.4",
     "joi-objectid": "^2.0.0",
-    "yar": "^7.0.0"<% } %>
+    "hapi": "^15.1.1",<% if (api) { %>
+    "http-client": "^4.3.1",
+    "isomorphic-fetch": "^2.2.1",<% } %>
+    "inert": "^4.0.2"<% if (mongo) { %>,
+    "mongoose": "^4.6.5"<% } %><% if (jwt) { %>,
+    "hapi-auth-jwt": "^4.0.0",
+    "mongoose-bcrypt": "^1.4.2",
+    "jsonwebtoken": "^7.1.9"<% } %>
   },<% } %>
-  "license": "MIT"
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-lodash": "^3.2.9",
+    <% if (react) { %>"babel-plugin-transform-react-jsx-source": "^6.9.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.2.10",
+    "babel-preset-react": "^6.16.0",
+    <% } %>"babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "copy-webpack-plugin": "^3.0.1",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.7.1",
+    "eslint-config-devine": "^1.0.2",
+    "eslint-loader": "^1.5.0",
+    "extract-text-webpack-plugin": "beta",
+    "file-loader": "^0.9.0",
+    <% if (!node) { %>"lodash": "^4.16.4",
+    <% } %>"html-loader": "^0.4.4",
+    "image-webpack-loader": "^3.0.0",
+    <% if (jest) { %>"jest": "^16.0.2",
+    <% } %><% if (node) { %>"nodemon": "^1.11.0",
+    <% } %>"postcss-cssnext": "^2.8.0",
+    "postcss-loader": "^1.0.0",
+    "postcss-reporter": "^1.4.1",
+    <% if (react) { %>"react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    <% if (redux) { %>"redux": "^3.6.0",
+    <% } %><% if (reactRouter) { %>"react-router": "next",
+    <% } %><% } %><% if (!node) { %>"react-dev-utils": "^0.3.0",
+    "webpack-dev-server": "beta",
+    "local-web-server": "^1.2.6",
+    <% } %>"rimraf": "^2.5.4",
+    "style-loader": "^0.13.1",
+    "stylelint": "^7.5.0",
+    "stylelint-config-devine": "^1.0.0",
+    "url-loader": "^0.5.7",
+    "webpack": "beta",
+    "webpack-config-htmls": "^1.0.1"
+  }
 }
