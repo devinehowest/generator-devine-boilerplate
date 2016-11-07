@@ -8,7 +8,7 @@ module.exports.register = (server, options, next) => {
 
   server.register(require(`hapi-auth-jwt`), pluginHandler);
 
-  server.decorate(`reply`, `token`, function(user, {subject, audience, expiresIn = `7d`} = {}){
+  server.decorate(`reply`, `token`, function(user, {subject, audience, expiresIn = `7d`} = {}) {
 
     const reply = this;
 

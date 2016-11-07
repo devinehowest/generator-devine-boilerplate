@@ -1,6 +1,11 @@
 # generator-devine-project
 
-> [Yeoman](http://yeoman.io) generator
+[![npm version](https://badge.fury.io/js/generator-devine-project.svg)](https://badge.fury.io/js/generator-devine-project)
+[![dependencies Status](https://david-dm.org/devinehowest/generator-devine-project/status.svg)](https://david-dm.org/devinehowest/generator-devine-project)
+
+> [Yeoman](http://yeoman.io) generates Boilerplate projects for you.
+
+Pick & choose from node.js (hapi), react, react-router, redux, MongoDB (mongoose), jwt,...
 
 ## Getting Started
 
@@ -23,6 +28,8 @@ Initiate the generator:
 ```bash
 yo devine-project
 ```
+
+Run the prompt and pick your options.
 
 ### NPM scripts
 

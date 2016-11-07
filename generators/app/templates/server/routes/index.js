@@ -12,7 +12,7 @@ module.exports.register = (server, options, next) => {
       const mod = {};
       mod[path.basename(f, `.js`)] = require(f);
 
-      for(const route in mod) server.route(mod[route]);
+      for (const route in mod) server.route(mod[route]);
 
     });
 

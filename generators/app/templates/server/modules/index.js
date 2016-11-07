@@ -10,11 +10,11 @@ module.exports.register = (server, options, next) => {
 
     /** if DIR, load index.js **/
     const stat = fs.lstatSync(path.join(__dirname, f));
-    if(stat.isDirectory() && !f.startsWith(`_`)){
+    if (stat.isDirectory() && !f.startsWith(`_`)) {
       server.register(require(path.join(__dirname, f)), pluginHandler);
     }
 
-    if(!isValidName(f)) return;
+    if (!isValidName(f)) return;
 
     server.register(require(`./${f}`), pluginHandler);
 

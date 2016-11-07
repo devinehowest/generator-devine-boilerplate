@@ -23,6 +23,6 @@ server.register(require(`./modules/`), pluginHandler);
 server.register(require(`./routes/`), pluginHandler);
 
 server.start(err => {
-  if(err) console.error(err);
+  if (err) console.error(err);
   console.log(`Server running at: http://localhost:${port}`);
 });

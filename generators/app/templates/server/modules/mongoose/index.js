@@ -15,7 +15,7 @@ module.exports.register = (server, options, next) => {
 
   fs.readdirSync(base).forEach(f => {
 
-    if(!isValidName(f)) return;
+    if (!isValidName(f)) return;
 
     const ff = path.resolve(base, f);
     const {schema, name = path.basename(f, `.js`)} = require(ff);

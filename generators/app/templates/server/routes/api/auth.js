@@ -47,7 +47,7 @@ module.exports = [
       }).then(user => {
 
 
-        if(!user){
+        if (!user) {
           return res(
             Boom.badRequest(`user/password combination incorrect`)
           );
@@ -55,7 +55,7 @@ module.exports = [
 
         user.verifyPassword(password, (err, isValid) => {
 
-          if(err || !isValid){
+          if (err || !isValid) {
             return res(
               Boom.badRequest(`user/password combination incorrect`)
             );

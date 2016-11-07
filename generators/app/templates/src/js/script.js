@@ -4,7 +4,7 @@ import {App} from './containers/';
 
 <% } %>const init = () => {
 
-  <% if(react) { %>render(
+  <% if (react) { %>render(
     <App />,
     document.querySelector(`.container`)
   );<% } else { %>console.log('Hello Boilerplate')<% } %>

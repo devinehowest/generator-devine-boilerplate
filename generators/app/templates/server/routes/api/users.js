@@ -36,7 +36,7 @@ module.exports = [
 
       user.save()
         .then(u => {
-          if(!u) return res(Boom.badRequest(`cannot save user`));
+          if (!u) return res(Boom.badRequest(`cannot save user`));
           u = omit(u.toJSON(), [`__v`, `password`, `isActive`]);
           return res(u);
         })
