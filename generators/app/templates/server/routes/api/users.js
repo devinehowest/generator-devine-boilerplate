@@ -5,11 +5,14 @@ const {pick, omit} = require(`lodash`);
 const Joi = require(`joi`);
 const Boom = require(`boom`);
 
+const base = `/api`;
+
 module.exports = [
 
   {
+
     method: `POST`,
-    path: `/api/users`,
+    path: `${base}/users`,
 
     config: {
 
@@ -43,6 +46,7 @@ module.exports = [
         .catch(() => res(Boom.badRequest(`cannot save user`)));
 
     }
+
   }
 
 ];

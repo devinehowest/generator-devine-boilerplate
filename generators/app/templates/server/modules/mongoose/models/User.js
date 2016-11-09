@@ -30,11 +30,13 @@ const schema = new Schema({
   isActive: {
     type: Boolean,
     default: true
-  },
+  }
 
-  created: {
-    type: Date,
-    default: Date.now
+}, {
+
+  timestamps: {
+    createdAt: `created`,
+    updatedAt: `modified`
   }
 
 });

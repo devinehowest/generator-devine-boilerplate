@@ -5,11 +5,14 @@ const {omit} = require(`lodash`);
 const Joi = require(`joi`);
 const Boom = require(`boom`);
 
+const base = `/api`;
+
 module.exports = [
 
   {
+
     method: `POST`,
-    path: `/api/auth`,
+    path: `${base}/auth`,
 
     config: {
 
@@ -75,6 +78,7 @@ module.exports = [
       });
 
     }
+
   }
 
 ];

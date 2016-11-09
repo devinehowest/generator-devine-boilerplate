@@ -203,9 +203,10 @@ module.exports = generator.Base.extend({
         `server/modules/mongoose/const/Scopes.js`,
         `server/modules/mongoose/models/User.js`,
 
+        `server/routes/api/_example.js`,
         `server/routes/api/auth.js`,
-        `server/routes/api/users.js`,
-        `server/routes/api/test.js`
+        `server/routes/api/notFound.js`,
+        `server/routes/api/users.js`
 
       ];
 
