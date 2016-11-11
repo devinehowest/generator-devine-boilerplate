@@ -16,6 +16,12 @@ module.exports = [
 
     config: {
 
+
+      auth: {
+        strategy: `token`,
+        mode: `try` /* mode: optional, same as try, but fails on invalid token */
+      },
+
       validate: {
 
         options: {
@@ -25,7 +31,9 @@ module.exports = [
         payload: {
           username: Joi.string().alphanum().min(3).required(),
           email: Joi.string().email().required(),
-          password: Joi.string().min(3).required()
+          password: Joi.string().min(3).required(),
+          isActive: Joi.boolean(),
+          scope: Joi.string().min(3)
         }
 
       }
@@ -34,7 +42,13 @@ module.exports = [
 
     handler: (req, res) => {
 
-      const data = pick(req.payload, [`username`, `email`, `password`]);
+      let fields = [`username`, `email`, `password`];
+
+      if (req.hasScope(Scopes.ADMIN)) {
+        fields = [...fields, `isActive`, `scope`];
+      }
+
+      const data = pick(req.payload, fields);
       const user = new User(data);
 
       user.save()

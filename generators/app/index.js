@@ -396,6 +396,10 @@ module.exports = generator.Base.extend({
         `.eslintrc`,
       ];
 
+      const editor = [
+        `.editorconfig`
+      ];
+
       const git = [
         `README.md`,
         `.gitignore`
@@ -428,7 +432,8 @@ module.exports = generator.Base.extend({
         ...postcss,
         ...stylelint,
         ...webpack,
-        ...npm
+        ...npm,
+        ...editor
       ];
 
       if (this.props.node) {

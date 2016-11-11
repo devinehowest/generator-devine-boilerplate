@@ -8,6 +8,25 @@ module.exports.register = (server, options, next) => {
 
   server.register(require(`hapi-auth-jwt`), pluginHandler);
 
+  server.decorate(`request`, `hasScope`, function(scope) {
+
+    const req = this;
+
+    const {auth} = req;
+
+    if (auth.isAuthenticated) {
+
+      const {credentials} = auth;
+
+      if (Array.isArray(scope)) return scope.find(s => s === credentials.scope);
+      else return scope === credentials.scope;
+
+    }
+
+    return false;
+
+  });
+
   server.decorate(`reply`, `token`, function(user, {subject, audience, expiresIn = `7d`} = {}) {
 
     const reply = this;
