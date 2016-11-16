@@ -1,6 +1,5 @@
-node_modules/
-test/
-test2/
+node_modules
+test
+test2
 npm-debug.log
-project/
-.DS_Store
+project

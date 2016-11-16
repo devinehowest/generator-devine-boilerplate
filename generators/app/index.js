@@ -1,5 +1,7 @@
 const generator = require(`yeoman-generator`);
 
+const {isPlainObject} = require(`lodash`);
+
 const {
   spawnSync: spawn,
   execSync: exec
@@ -20,9 +22,14 @@ module.exports = generator.Base.extend({
 
   _copyFile(f) {
 
+    let from = f;
+    let to = f;
+
+    if (isPlainObject(f)) ({from, to} = f);
+
     this.fs.copyTpl(
-      this.templatePath(f),
-      this.destinationPath(f),
+      this.templatePath(from),
+      this.destinationPath(to),
       this.props,
       {
         interpolate: /<%=([\s\S]+?)%>/g
@@ -402,7 +409,7 @@ module.exports = generator.Base.extend({
 
       const git = [
         `README.md`,
-        `.gitignore`
+        {from: `_gitignore`, to: `.gitignore`}
       ];
 
       const babel = [
@@ -422,7 +429,7 @@ module.exports = generator.Base.extend({
       ];
 
       const npm = [
-        `package.json`
+        {from: `_package.json`, to: `package.json`}
       ];
 
       let files = [

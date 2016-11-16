@@ -1,6 +1,3 @@
-// changed some loader syntax after reading
-// https://webpack.js.org/how-to/upgrade-from-webpack-1/
-
 const path = require(`path`);
 
 const webpack = require(`webpack`);<% if (!node) { %>

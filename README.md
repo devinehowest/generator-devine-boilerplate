@@ -1,9 +1,7 @@
-# generator-devine-project
+# generator-devine-boilerplate
 
-[![npm version](https://badge.fury.io/js/generator-devine-project.svg)](https://badge.fury.io/js/generator-devine-project)
-[![dependencies Status](https://david-dm.org/devinehowest/generator-devine-project/status.svg)](https://david-dm.org/devinehowest/generator-devine-project)
-
-> [Yeoman](http://yeoman.io) generates Boilerplate projects for you.
+[![npm version](https://badge.fury.io/js/generator-devine-boilerplate.svg)](https://badge.fury.io/js/generator-devine-boilerplate)
+[![dependencies Status](https://david-dm.org/devinehowest/generator-devine-boilerplate/status.svg)](https://david-dm.org/devinehowest/generator-devine-boilerplate)
 
 Pick & choose from node.js (hapi), react, react-router, redux, MongoDB (mongoose), jwt,...
 
@@ -15,10 +13,10 @@ Pick & choose from node.js (hapi), react, react-router, redux, MongoDB (mongoose
 yarn global add yo
 ```
 
-### Install generator-devine-project
+### Install generator-devine-boilerplate
 
 ```bash
-yarn global add generator-devine-project
+yarn global add generator-devine-boilerplate
 ```
 
 ## Usage
@@ -26,7 +24,7 @@ yarn global add generator-devine-project
 Initiate the generator:
 
 ```bash
-yo devine-project
+yo devine-boilerplate
 ```
 
 Run the prompt and pick your options.
