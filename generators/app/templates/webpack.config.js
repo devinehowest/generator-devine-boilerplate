@@ -62,21 +62,21 @@ const config = {
       {
         test: /\.css$/,
         <% if (node) { %>loader<% } else { %>use<% } %>: <% if (node) { %>extractCSS.extract(<% } %>[
-          <% if (!node) { %>`style`,
+          <% if (!node) { %>`style-loader`,
           <% } %>{
-            loader: `css`,
+            loader: `css-loader`,
             options: {
               importLoaders: 1
             }
           },
           {
-            loader: `postcss`
+            loader: `postcss-loader`
           }
         ]<% if (node) { %>)<% } %>
       },
       {
         test: /\.html$/,
-        loader: `html`,
+        loader: `html-loader`,
         options: {
           attrs: [
             `audio:src`,
@@ -91,10 +91,10 @@ const config = {
         exclude: /node_modules/,
         use: [
           {
-            loader: `babel`
+            loader: `babel-loader`
           },
           {
-            loader: `eslint`,
+            loader: `eslint-loader`,
             options: {
               fix: true
             }
@@ -103,7 +103,7 @@ const config = {
       },
       {
         test: /\.(svg|png|jpe?g|gif|webp)$/,
-        loader: `url`,
+        loader: `url-loader`,
         options: {
           limit: 1000, // inline if < 1 kb
           context: `./src`,
@@ -112,7 +112,7 @@ const config = {
       },
       {
         test: /\.(mp3|mp4)$/,
-        loader: `file`,
+        loader: `file-loader`,
         options: {
           context: `./src`,
           name: `[path][name].[ext]`
@@ -141,13 +141,13 @@ if(process.env.NODE_ENV === `production`){<% if (!node) { %>
     test: /\.css$/,
     loader: extractCSS.extract([
       {
-        loader: `css`,
+        loader: `css-loader`,
         options: {
           importLoaders: 1
         }
       },
       {
-        loader: `postcss`
+        loader: `postcss-loader`
       }
     ])
   });<% } %>
@@ -155,7 +155,7 @@ if(process.env.NODE_ENV === `production`){<% if (!node) { %>
   //image optimizing
   config.module.rules.push({
     test: /\.(svg|png|jpe?g|gif)$/,
-    loader: `image-webpack`,
+    loader: `image-webpack-loader`,
     enforce: `pre`
   });
 

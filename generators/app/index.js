@@ -9,7 +9,14 @@ const {
 
 const mkdir = require(`mkdirp`);
 
+let isFirstClear = false;
+
 module.exports = generator.Base.extend({
+
+  _clearConsole() {
+    process.stdout.write(isFirstClear ? `\x1bc` : `\x1b[2J\x1b[0f`);
+    isFirstClear = false;
+  },
 
   _spawn(cmd) {
 
@@ -479,6 +486,8 @@ module.exports = generator.Base.extend({
         this._spawn(`heroku buildbacks:set https://github.com/heroku/heroku-buildpack-nodejs#yarn`);
       }
     }
+
+    this._clearConsole();
 
     this._spawn(`npm run development`);
 
