@@ -6,6 +6,10 @@
     "react"<% } %>
   ],
 
+  <% if(flow) {%>"plugins": [
+    ["transform-flow-strip-types"]
+  ],<% } %>
+
   "env": {
 
     <% if (react) { %>"development": {

@@ -7,7 +7,8 @@
     "serve": "<% if (node) { %>forever .<% } else { %>ws -d ./dist -c -p 3000 <% if (reactRouter) { %>-s<% } %><% } %>",
     "clean": "rimraf <% if (node) { %>./server/public/<% } else { %>./dist<% } %>",
     "production": "npm run clean && NODE_ENV=production webpack -p"<% if (jest) { %>,
-    "test": "jest --coverage"<% } %>
+    "test": "jest --coverage"<% } %><% if (flow) {%>,
+    "flow": "flow --color always"<% } %>
   },<% if (node) { %>
   "main": "server/index.js",
   "engines": {
@@ -33,6 +34,7 @@
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-lodash": "^3.2.9",
+    <% if(flow) { %>"babel-plugin-transform-flow-strip-types": "^6.18.0",<% } %>
     <% if (react) { %>"babel-plugin-transform-react-jsx-source": "^6.9.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.2.10",
     "babel-preset-react": "^6.16.0",
@@ -45,6 +47,7 @@
     "eslint-loader": "^1.5.0",
     "extract-text-webpack-plugin": "beta",
     "file-loader": "^0.9.0",
+    <% if(flow) { %>"flow-bin": "^0.35.0",<% } %>
     <% if (!node) { %>"lodash": "^4.16.4",
     <% } %>"html-loader": "^0.4.4",
     "image-webpack-loader": "^3.0.0",

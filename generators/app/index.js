@@ -68,6 +68,7 @@ module.exports = generator.Base.extend({
       jest: false,
       api: false,
       jwt: false,
+      flow: false,
 
       yarn: true,
 
@@ -143,6 +144,11 @@ module.exports = generator.Base.extend({
       name: `jest`,
       default: false,
       message: `need testing? (Jest) (No)`
+    }, {
+      type: `confirm`,
+      name: `flow`,
+      default: false,
+      message: `Do you need flow for type checking? (No)`
     }]).then(props => {
       this.props = Object.assign(this.props, props);
     });
@@ -295,6 +301,19 @@ module.exports = generator.Base.extend({
           ];
 
         }
+
+      }
+
+      if (this.props.flow) {
+
+        const flow = [
+          `.flowconfig`
+        ];
+
+        files = [
+          ...files,
+          ...flow
+        ];
 
       }
 
