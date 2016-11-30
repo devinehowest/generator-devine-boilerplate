@@ -21,7 +21,7 @@
     "lodash": "^4.16.4",
     "joi": "^9.2.0",
     "joi-objectid": "^2.0.0",
-    "hapi": "^15.1.1",<% if (api) { %>
+    "hapi": "^16.0.0",<% if (api) { %>
     "http-client": "^4.3.1",
     "isomorphic-fetch": "^2.2.1",<% } %>
     "inert": "^4.0.2"<% if (mongo) { %>,
@@ -57,7 +57,7 @@
     "postcss-loader": "^1.0.0",
     "postcss-reporter": "^1.4.1",
     "postcss-will-change": "^1.1.0",
-    <% if (react) { %>"react": "^15.3.2",
+    <% if (react) { %>"react": "^15.4.1",
     "react-dom": "^15.3.2",
     <% if (redux) { %>"redux": "^3.6.0",
     <% } %><% if (reactRouter) { %>"react-router": "next",

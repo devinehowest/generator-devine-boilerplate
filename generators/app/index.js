@@ -148,11 +148,7 @@ module.exports = generator.Base.extend({
       type: `confirm`,
       name: `flow`,
       default: false,
-<<<<<<< HEAD
-      message: `Do you need flow for type checking? (No)`
-=======
       message: `need Flow (type checking)? (No)`
->>>>>>> devinehowest/master
     }]).then(props => {
       this.props = Object.assign(this.props, props);
     });
