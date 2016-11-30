@@ -304,19 +304,6 @@ module.exports = generator.Base.extend({
 
       }
 
-      if (this.props.flow) {
-
-        const flow = [
-          `.flowconfig`
-        ];
-
-        files = [
-          ...files,
-          ...flow
-        ];
-
-      }
-
       files.forEach(f => this._copyFile(f));
 
     },
