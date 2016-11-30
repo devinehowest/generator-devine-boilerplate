@@ -56,6 +56,7 @@
     <% } %>"postcss-cssnext": "^2.8.0",
     "postcss-loader": "^1.0.0",
     "postcss-reporter": "^1.4.1",
+    "postcss-will-change": "^1.1.0",
     <% if (react) { %>"react": "^15.3.2",
     "react-dom": "^15.3.2",
     <% if (redux) { %>"redux": "^3.6.0",

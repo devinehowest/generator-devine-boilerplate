@@ -1,0 +1,10 @@
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc<% if (flow) { %>
+.flowconfig<% } %>
+.stylelintrc
+/src
+nodemon.json
+*.config.js
+README.md
