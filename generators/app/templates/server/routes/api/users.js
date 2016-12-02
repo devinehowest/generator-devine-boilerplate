@@ -2,6 +2,8 @@ const {User} = require(`mongoose`).models;
 
 const {pick, omit} = require(`lodash`);
 
+const Scopes = require(`../../modules/mongoose/const/Scopes`);
+
 const Joi = require(`joi`);
 const Boom = require(`boom`);
 

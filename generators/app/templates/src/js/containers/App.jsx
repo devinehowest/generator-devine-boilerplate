@@ -11,7 +11,7 @@ const App = () => {
       <main>
         <Match
           exactly pattern='/'
-          render={Home}
+          component={Home}
         />
       </main>
     </Router><% } %>
