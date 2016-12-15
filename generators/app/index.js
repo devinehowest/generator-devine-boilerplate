@@ -9,6 +9,9 @@ const {
 
 const mkdir = require(`mkdirp`);
 
+const updateNotifier = require(`update-notifier`);
+const pkg = require(`../../package.json`);
+
 let isFirstClear = false;
 
 module.exports = generator.Base.extend({
@@ -91,6 +94,9 @@ module.exports = generator.Base.extend({
   },
 
   prompting() {
+    updateNotifier({pkg}).notify({
+      defer: false
+    });
 
     return this.prompt([{
       type: `input`,
