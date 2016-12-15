@@ -130,7 +130,7 @@ const config = {
 
 };
 
-if(process.env.NODE_ENV === `production`){<% if (!node) { %>
+if (process.env.NODE_ENV === `production`) {<% if (!node) { %>
 
   //remove hot reloading client
   config.entry.shift();
@@ -169,13 +169,17 @@ if(process.env.NODE_ENV === `production`){<% if (!node) { %>
     })
   ];
 
-}<% if (!node) { %>else{
+} else {<% if (!node) { %>
 
   // only include HTMLs in NODE_ENV=development
   // for Hot Reloading
-  config.entry = [...config.entry, ...configHtmls.entry];
+  config.entry = [...config.entry, ...configHtmls.entry];<% } %>
 
-}<% } %>
+  config.performance = {
+    hints: false
+  };
+
+}
 
 config.plugins = [...config.plugins, ...configHtmls.plugins];
 

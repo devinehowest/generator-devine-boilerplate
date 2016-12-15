@@ -86,13 +86,17 @@ module.exports = generator.Base.extend({
 
   },
 
+  _parseName(name) {
+    return name.split(` `).join(`-`);
+  },
+
   prompting() {
 
     return this.prompt([{
       type: `input`,
       name: `name`,
       message: `Your project name`,
-      default: this.appname
+      default: this._parseName(this.appname)
     }, {
       type: `confirm`,
       name: `react`,
@@ -179,13 +183,11 @@ module.exports = generator.Base.extend({
       ];
 
       const react = [
-        `src/js/containers/App.jsx`,
-        `src/js/containers/index.js`
+        `src/js/containers/App.jsx`
       ];
 
       const reactRouter = [
-        `src/js/pages/Home.jsx`,
-        `src/js/pages/index.js`
+        `src/js/pages/Home.jsx`
       ];
 
       const redux = [

@@ -1,7 +1,7 @@
 import React from 'react';<% if(reactRouter) { %>
 import {Match, BrowserRouter as Router} from 'react-router';
 
-import {Home} from '../pages/';<% } %>
+import Home from '../pages/Home';<% } %>
 
 const App = () => {
   return (

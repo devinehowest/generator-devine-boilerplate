@@ -61,7 +61,7 @@
     "react-dom": "^15.3.2",
     <% if (redux) { %>"redux": "^3.6.0",
     <% } %><% if (reactRouter) { %>"react-router": "next",
-    <% } %><% } %><% if (!node) { %>"react-dev-utils": "^0.3.0",
+    <% } %><% } %><% if (!node) { %>"react-dev-utils": "^0.4.2",
     "webpack-dev-server": "beta",
     "local-web-server": "^1.2.6",
     <% } %>"rimraf": "^2.5.4",
@@ -69,7 +69,7 @@
     "stylelint": "^7.5.0",
     "stylelint-config-devine": "^1.0.0",
     "url-loader": "^0.5.7",
-    "webpack": "beta",
+    "webpack": "2.1.0-beta.28",
     "webpack-config-htmls": "^1.0.1"
   }
 }
