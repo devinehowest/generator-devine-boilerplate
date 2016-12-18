@@ -60,6 +60,8 @@ module.exports = generator.Base.extend({
 
     this.props = {
 
+      wfloader: false,
+
       react: false,
       redux: false,
       reactRouter: false,
@@ -103,6 +105,11 @@ module.exports = generator.Base.extend({
       name: `name`,
       message: `Your project name`,
       default: this._parseName(this.appname)
+    }, {
+      type: `confirm`,
+      name: `wfloader`,
+      default: false,
+      message: `Do you need Web Font Loader? (No)`
     }, {
       type: `confirm`,
       name: `react`,
@@ -174,6 +181,10 @@ module.exports = generator.Base.extend({
         `src/css/style.css`
       ];
 
+      const wfloader = [
+        `src/css/fonts.css`
+      ];
+
       const js = [
         `src/js/script.js`
       ];
@@ -237,6 +248,15 @@ module.exports = generator.Base.extend({
         `server/routes/api/users.js`
 
       ];
+
+      if (this.props.wfloader) {
+
+        files = [
+          ...files,
+          ...wfloader
+        ];
+
+      }
 
       if (this.props.react) {
 
