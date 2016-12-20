@@ -181,10 +181,6 @@ module.exports = generator.Base.extend({
         `src/css/style.css`
       ];
 
-      const wfloader = [
-        `src/css/fonts.css`
-      ];
-
       const js = [
         `src/js/script.js`
       ];
@@ -248,15 +244,6 @@ module.exports = generator.Base.extend({
         `server/routes/api/users.js`
 
       ];
-
-      if (this.props.wfloader) {
-
-        files = [
-          ...files,
-          ...wfloader
-        ];
-
-      }
 
       if (this.props.react) {
 
