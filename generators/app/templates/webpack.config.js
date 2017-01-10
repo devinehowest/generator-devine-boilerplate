@@ -111,7 +111,7 @@ const config = {
         }
       },
       {
-        test: /\.(mp3|mp4)$/,
+        test: /\.(mp3|mp4|wav)$/,
         loader: `file-loader`,
         options: {
           context: `./src`,
