@@ -19,7 +19,13 @@
       ]
     },
 
-    <% } %>"production": {
+    <% } %>
+    <% if (jest) { %>"test": {
+      "presets": ["es2015"]           
+    },
+    <% } %>
+
+    "production": {
       "plugins": [
         "lodash"<% if (react) { %>,
         "transform-react-remove-prop-types"<% } %>
