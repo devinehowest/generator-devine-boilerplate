@@ -4,7 +4,7 @@
   "scripts": {
     "development": "npm run clean && <% if (node) { %>nodemon . & NODE_ENV=development webpack --watch<% } else { %>NODE_ENV=development webpack-dev-server --open<% } %>",<% if (node) { %>
     "start": "npm run serve",<% } %>
-    "serve": "<% if (node) { %>forever .<% } else { %>ws -d ./dist -c -p 3000 <% if (reactRouter) { %>-s<% } %><% } %>",
+    "serve": "<% if (node) { %>forever .<% } else { %>serve ./dist -p 3000<% if (reactRouter) { %> -s<% } %><% } %>",
     "clean": "rimraf <% if (node) { %>./server/public/<% } else { %>./dist<% } %>",
     "production": "npm run clean && NODE_ENV=production webpack -p"<% if (jest) { %>,
     "test": "jest --coverage"<% } %><% if (flow) {%>,
@@ -64,7 +64,7 @@
     <% } %><% if (reactRouter) { %>"react-router": "next",
     <% } %><% } %><% if (!node) { %>"react-dev-utils": "^0.4.2",
     "webpack-dev-server": "beta",
-    "local-web-server": "^1.2.6",
+    "serve": "^2.1.2",
     <% } %>"rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "stylelint": "^7.7.1",
