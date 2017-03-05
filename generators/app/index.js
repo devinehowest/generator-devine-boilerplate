@@ -548,7 +548,7 @@ module.exports = generator.Base.extend({
     if (this.props.heroku) {
       this._spawn(`heroku create`);
       if (this.props.yarn) {
-        this._spawn(`heroku buildbacks:set https://github.com/heroku/heroku-buildpack-nodejs#yarn`);
+        this._spawn(`heroku buildpacks:set https://github.com/heroku/heroku-buildpack-nodejs#yarn`);
       }
     }
 
