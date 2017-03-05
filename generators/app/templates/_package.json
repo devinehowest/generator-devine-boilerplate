@@ -36,7 +36,7 @@
     "babel-plugin-lodash": "^3.2.11",
     <% if(flow) { %>"babel-plugin-transform-flow-strip-types": "^6.21.0",<% } %>
     <% if (react) { %>"babel-plugin-transform-react-jsx-source": "^6.9.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.2.11",
+    "babel-plugin-transform-react-remove-prop-types": "^0.3.2",
     "babel-plugin-transform-react-stateless-component-name": "^1.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-react": "^6.16.0",
@@ -49,12 +49,12 @@
     "eslint-config-devine": "^1.6.1",
     "eslint-loader": "^1.6.1",
     "extract-text-webpack-plugin": "^2.0.0",
-    "file-loader": "^0.9.0",
-    <% if(flow) { %>"flow-bin": "^0.37.4",<% } %>
+    "file-loader": "^0.10.1",
+    <% if(flow) { %>"flow-bin": "^0.41.0",<% } %>
     <% if (!node) { %>"lodash": "^4.17.4",
     <% } %>"html-loader": "^0.4.4",
     "image-webpack-loader": "^3.1.0",
-    <% if (jest) { %>"jest": "^18.1.0",
+    <% if (jest) { %>"jest": "^19.0.2",
     <% } %><% if (node) { %>"nodemon": "^1.11.0",
     <% } %>"postcss-cssnext": "^2.9.0",
     "postcss-loader": "^1.2.1",
