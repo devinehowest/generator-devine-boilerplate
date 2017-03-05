@@ -29,7 +29,7 @@
     },<% } %>
 
     <% if (jest) { %>"test": {
-      "presets": ["es2015"]
+      "presets": ["env", targets: {"node": "current"}]
     },<% } %>
 
     "production": {
