@@ -1,7 +1,14 @@
 {
 
   "presets": [
-    ["es2015", { "modules": false, "loose": true }]<% if (react) { %>,
+    ["env", {
+      "targets": {
+        <% if(node) { %>"node": "current",<% } %>
+        "browsers": ["last 2 versions", "ie >= 11"]
+      },
+      "modules": false,
+      "loose": true
+      }]<% if (react) { %>,
     "react"<% } %>
   ],
 
