@@ -1,6 +1,6 @@
 {
   "name": "generator-devine-boilerplate",
-  "version": "3.10.1",
+  "version": "3.10.2",
   "description": "the one and only devine.be yeoman boilerplate generator",
   "license": "MIT",
   "main": "generators/app/index.js",
