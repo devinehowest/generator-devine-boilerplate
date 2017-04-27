@@ -2,24 +2,13 @@ const path = require(`path`);
 const glob = require(`glob`);
 
 module.exports.register = (server, options, next) => {
-
-  const g = path.join(__dirname, `**/*.js`);
-
-  glob(g, {ignore: [`**/*/index.js`, `**/*/_*.js`]}, (err, files) => {
-
-    files.forEach(f => {
-
-      const mod = {};
-      mod[path.basename(f, `.js`)] = require(f);
-
-      for (const route in mod) server.route(mod[route]);
-
-    });
-
-  });
+  glob(
+    path.join(__dirname, `**/*.js`),
+    {ignore: [`**/*/index.js`, `**/*/_*.js`]},
+    (err, files) => files.forEach(f => server.route(require(f)))
+  );
 
   next();
-
 };
 
 module.exports.register.attributes = {
