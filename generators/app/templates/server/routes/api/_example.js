@@ -149,11 +149,11 @@ const methods = {
             return res(d); // CODE: 200 => OK
 
           })
-          .catch(err => res(
-            Boom.badRequest(err.message)) // mongoose, mongodb errors (400)
-          );
+          .catch(err => res( // mongoose, mongodb errors (400)
+            Boom.badRequest(err.message)
+          ));
 
-        } else return ( // update failed
+        } else return res( // update failed
           Boom.badRequest(`error while updating ${modelName} with _id ${_id}`)
         );
 
