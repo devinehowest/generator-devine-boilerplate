@@ -2,7 +2,7 @@
 @import 'vars';
 
 html {
-  background-color: var(--bgColor);
+  background-color: var(--bg-color);
 }
 
 body {
