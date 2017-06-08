@@ -49,6 +49,7 @@ table {
 
 html {
   box-sizing: border-box;
+  font-size: 62.5%;
 }
 
 *, *::before, *::after { /* stylelint-disable-line */

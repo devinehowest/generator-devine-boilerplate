@@ -185,7 +185,8 @@ module.exports = generator.Base.extend({
 
       const css = [
         `src/css/reset.css`,
-        `src/css/style.css`
+        `src/css/style.css`,
+        `src/css/vars.css`
       ];
 
       const js = [
